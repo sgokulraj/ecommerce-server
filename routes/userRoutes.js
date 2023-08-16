@@ -72,7 +72,9 @@ router.delete("/:id/profile", async (req, res)=>{
     try{
         const {id} = req.params
         const user = await User.findById(id).populate('orders')
+        console.log(user.orders._id);
         const userOrderId = JSON.stringify(user.orders._id)
+        console.log(userOrderId);
         await Order.findByIdAndDelete(userOrderId)
         await User.findByIdAndDelete(id)
         res.send("user deleted successfully")
