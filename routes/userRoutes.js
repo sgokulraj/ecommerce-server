@@ -7,11 +7,12 @@ const router = express.Router()
 //register
 router.post('/signup', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, mobile, gender, images: profilephoto } = req.body;
         console.log(req.body);
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
-        const user = await User.create({ username, email, password: passwordHash });
+        const user = await User.create({ username, email, mobile, gender, profilephoto, password: passwordHash });
+        delete user.profilephoto;
         res.status(201).json(user)
     } catch (error) {
         if (error.code === 11000) {
@@ -39,6 +40,17 @@ router.post("/login", async (req, res) => {
         }
     } catch (err) {
         res.status(400).send(err.message);
+    }
+})
+
+//get user profile
+router.get("/:id/profile", async (req, res) => {
+    try {
+        const { id } = req.params
+        const user = await User.findById(id)
+        res.json(user)
+    } catch (error) {
+        res.status(400).send(error.message);
     }
 })
 

@@ -22,6 +22,18 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Password is required"]
     },
+    mobile: {
+        type: Number,
+        required: [true, "Mobile number is required"]
+    },
+    gender: {
+        type: String,
+        required: [true, "Gender is required"]
+    },
+    profilephoto:{
+        type: Array,
+        required: true
+    },
     isAdmin: {
         type: Boolean,
         default: false
@@ -40,8 +52,8 @@ const userSchema = new Schema({
     orders: [{
         type: Schema.Types.ObjectId, ref: "Order"
     }]
-},{minimize: false})
+}, { minimize: false })
 
-const User = model("User",userSchema)
+const User = model("User", userSchema)
 
 module.exports = User
