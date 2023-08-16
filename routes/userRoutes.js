@@ -54,6 +54,29 @@ router.get("/:id/profile", async (req, res) => {
     }
 })
 
+//update user profile
+router.patch("/:id/profile", async (req, res) => {
+    try {
+        const { id } = req.params
+        const { username, email, mobile, gender, images: profilephoto } = req.body;
+        const user = await User.findByIdAndUpdate(id, { username, email, mobile,  gender, profilephoto })
+        const updatedUser = await User.findById(id)
+        res.json(updatedUser)
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+})
+
+router.delete("/:id/profile", async (req, res)=>{
+    try{
+        const {id} = req.params
+        await User.findByIdAndDelete(id)
+        res.send("user deleted successfully")
+    }catch(err){
+        res.status(400).send(err.message);
+    }
+})
+
 //get users
 router.get("/", async (req, res) => {
     try {
