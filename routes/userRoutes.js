@@ -72,16 +72,12 @@ router.delete("/:id/profile", async (req, res) => {
     try {
         const { id } = req.params
         const user = await User.findById(id).populate('orders')
+        console.log(user);
         console.log(user.orders)
-        let userOrderIds = user.orders.map((order) => {
-            return JSON.stringify(order._id)
-        })
-        // console.log(user.orders[0]._id);
-        // const userOrderId = JSON.stringify(user.orders[0]._id)
-        // console.log(userOrderId);
-        userOrderIds.map((userOrderId)=>{
-            return Order.findByIdAndDelete(userOrderId)
-        })
+        console.log(user.orders[0]._id);
+        const userOrderId = JSON.stringify(user.orders[0]._id)
+        console.log(userOrderId);
+        await Order.findByIdAndDelete(userOrderId)
         await User.findByIdAndDelete(id)
         res.send("user deleted successfully")
     } catch (err) {
