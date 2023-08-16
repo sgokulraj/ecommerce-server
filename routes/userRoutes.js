@@ -1,5 +1,6 @@
 const express = require("express")
 const User = require("../models/Usermodel.js")
+const Order = require("../models/OrderModel.js")
 const bcrypt = require("bcrypt")
 
 const router = express.Router()
@@ -70,6 +71,9 @@ router.patch("/:id/profile", async (req, res) => {
 router.delete("/:id/profile", async (req, res)=>{
     try{
         const {id} = req.params
+        const user = await User.findById(id).populate('orders')
+        const userOrderId = JSON.stringify(user.orders._id)
+        await Order.findByIdAndDelete(userOrderId)
         await User.findByIdAndDelete(id)
         res.send("user deleted successfully")
     }catch(err){
