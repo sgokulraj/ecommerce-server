@@ -60,7 +60,7 @@ router.patch("/:id/profile", async (req, res) => {
     try {
         const { id } = req.params
         const { username, email, mobile, gender, images: profilephoto } = req.body;
-        const user = await User.findByIdAndUpdate(id, { username, email, mobile,  gender, profilephoto })
+        const user = await User.findByIdAndUpdate(id, { username, email, mobile, gender, profilephoto })
         const updatedUser = await User.findById(id)
         res.json(updatedUser)
     } catch (err) {
@@ -68,17 +68,23 @@ router.patch("/:id/profile", async (req, res) => {
     }
 })
 
-router.delete("/:id/profile", async (req, res)=>{
-    try{
-        const {id} = req.params
+router.delete("/:id/profile", async (req, res) => {
+    try {
+        const { id } = req.params
         const user = await User.findById(id).populate('orders')
-        console.log(user.orders._id);
-        const userOrderId = JSON.stringify(user.orders._id)
-        console.log(userOrderId);
-        await Order.findByIdAndDelete(userOrderId)
+        console.log(user.orders)
+        let userOrderIds = user.orders.map((order) => {
+            return JSON.stringify(order._id)
+        })
+        // console.log(user.orders[0]._id);
+        // const userOrderId = JSON.stringify(user.orders[0]._id)
+        // console.log(userOrderId);
+        userOrderIds.map((userOrderId)=>{
+            return Order.findByIdAndDelete(userOrderId)
+        })
         await User.findByIdAndDelete(id)
         res.send("user deleted successfully")
-    }catch(err){
+    } catch (err) {
         res.status(400).send(err.message);
     }
 })
