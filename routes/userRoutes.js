@@ -13,7 +13,6 @@ router.post('/signup', async (req, res) => {
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
         const user = await User.create({ username, email, mobile, gender, profilephoto, password: passwordHash });
-        delete user.profilephoto;
         res.status(201).json(user)
     } catch (error) {
         if (error.code === 11000) {
